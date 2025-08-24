@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museo Digital del Amor - Carla & Rubén</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Verdana', sans-serif;
+    background: url('https://i.imgur.com/aTBBRVk.jpeg') center center / cover no-repeat fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .museo-container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .entrance {
+            text-align: center;
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .museum-title {
+            font-size: 3.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 10px rgba(255,255,255,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 10px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .enter-button {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,107,157,0.3);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .enter-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255,107,157,0.4);
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateY(-5px) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+            100% { transform: translateY(-5px) scale(1); }
+        }
+
+        .salas-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .sala-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInScale 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .sala-card:nth-child(1) { animation-delay: 0.1s; }
+        .sala-card:nth-child(2) { animation-delay: 0.2s; }
+        .sala-card:nth-child(3) { animation-delay: 0.3s; }
+        .sala-card:nth-child(4) { animation-delay: 0.4s; }
+        .sala-card:nth-child(5) { animation-delay: 0.5s; }
+        .sala-card:nth-child(6) { animation-delay: 0.6s; }
+        .sala-card:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .sala-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .sala-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .sala-title {
+            font-size: 1.8rem;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+        }
+
+        .sala-description {
+            color: #fff;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .sala-detail {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            overflow-y: auto;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .sala-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: #c44569;
+            transform: scale(1.1);
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            z-index: 5000;
+            pointer-events: none;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b9d;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .back-to-museum {
+            background: linear-gradient(45deg, #3c40c6, #00d2d3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-museum:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6b9d;
+            font-size: 20px;
+            animation: float-up 4s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 1; transform: translateY(0) scale(0); }
+            15% { opacity: 1; transform: translateY(-20px) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+        }
+
+        .foto-placeholder {max-width: 300px;
+            width: 300px;
+            background: linear-gradient(45deg, #ff6b9d, #f8b500);
+            border-radius: 15px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .love-letter {
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 300px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            color: #333;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: left;
+            border-left: 5px solid #ff6b9d;
+        }
+
+        @media (max-width: 768px) {
+            .museum-title { font-size: 2.5rem; }
+            .subtitle { font-size: 1.4rem; }
+            .salas-grid { grid-template-columns: 1fr; padding: 20px; }
+            .sala-content { padding: 40px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="museo-container">
+        <!-- Pantalla de entrada -->
+        <div class="entrance" id="entrance">
+            <h1 class="museum-title">🏛️ Museo Digital del Amor</h1>
+            <h2 class="subtitle">Carla & Rubén</h2>
+            <p style="color: white; font-size: 1.2rem; margin-bottom: 30px; opacity: 0.8;">
+                Una colección exclusiva de nuestros momentos más preciosos
+            </p>
+            <button class="enter-button" onclick="enterMuseum()">✨ Entrar al Museo ✨</button>
+        </div>
+
+        <!-- Grid de salas -->
+        <div class="salas-grid" id="salas-grid">
+            <div class="sala-card" onclick="openSala('origenes')">
+                <span class="sala-icon">🌟</span>
+                <h3 class="sala-title">Sala de los Orígenes</h3>
+                <p class="sala-description">La historia de cómo dos corazones se encontraron sin haberse buscado</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('primeras')">
+                <span class="sala-icon">💋</span>
+                <h3 class="sala-title">Galería de Primeras Veces</h3>
+                <p class="sala-description">El primer beso en tu sofá, ese momento íntimo que cambió todo</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('aventuras')">
+                <span class="sala-icon">🎵</span>
+                <h3 class="sala-title">Pabellón de Aventuras</h3>
+                <p class="sala-description">Lollapalooza, System of a Down y todos nuestros momentos divertidos</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('celebraciones')">
+                <span class="sala-icon">🎂</span>
+                <h3 class="sala-title">Salón de Celebraciones</h3>
+                <p class="sala-description">Cumpleaños, aniversarios, velas, pizza y vino bajo las estrellas</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('gastronomica')">
+                <span class="sala-icon">🍽️</span>
+                <h3 class="sala-title">Plaza Gastronómica</h3>
+                <p class="sala-description">La Mesa Tropera, Roatan, Chachan y nuestra pasión por descubrir sabores juntos</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('fotos')">
+                <span class="sala-icon">📸</span>
+                <h3 class="sala-title">Cápsula del Tiempo</h3>
+                <p class="sala-description">Nuestra galería de momentos capturados, llena de sonrisas y recuerdos</p>
+            </div>
+
+            <div class="sala-card" onclick="openSala('tesoro')">
+                <span class="sala-icon">💎</span>
+                <h3 class="sala-title">Sala del Tesoro Final</h3>
+                <p class="sala-description">Una carta especial para celebrar nuestros 3 meses oficiales de amor puro</p>
+            </div>
+        </div>
+
+        <!-- Salas detalladas -->
+        <div class="sala-detail" id="sala-origenes">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #3c40c6; font-size: 2.5rem; margin-bottom: 30px;">🌟 Sala de los Orígenes</h2>
+                <img src="https://i.imgur.com/b6njaO8.jpeg" alt="Nuestro grupo de amigos" class="foto-placeholder">
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Todo comenzó con una mudanza a Santiago y una amistad especial con una amiga, de ese entonces...
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    En un grupo de seis personas, dos corazones se reconocieron desde el primer momento y surgió una linda amistad. 
+                    Rubén te vio y supo que eras especial, pero el timing no era el correcto. Durante 3 años, 
+                    el amor esperó pacientemente, madurando como el mejor vino, hasta que finalmente las estrellas 
+                    se alinearon y ambos estaban libres para escribir juntos esta hermosa historia.
+                </p>
+                <img src="https://i.imgur.com/xdb0rJO.jpeg" alt="La primera foto juntos como amigos" class="foto-placeholder">
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Efectos especiales -->
+    <div class="hearts" id="hearts"></div>
+    <div class="confetti" id="confetti"></div>
+
+    <script>
+        let currentAudio = null;
+
+        function enterMuseum() {
+            createConfetti();
+            document.getElementById('entrance').style.display = 'none';
+            document.getElementById('salas-grid').style.display = 'grid';
+            
+            // Reproducir sonido de entrada (opcional)
+            playSound('enter');
+        }
+
+        function openSala(salaId) {
+            document.getElementById('sala-' + salaId).style.display = 'block';
+            document.getElementById('salas-grid').style.display = 'none';
+            
+            // Efectos especiales según la sala
+            if (salaId === 'primeras') {
+                createHearts();
+            } else if (salaId === 'tesoro') {
+                createConfetti();
+                createHearts();
+            } else if (salaId === 'aventuras') {
+                playSound('adventure');
+            }
+            
+            // Scroll al top
+            window.scrollTo(0, 0);
+        }
+
+        function closeSala() {
+            const salas = document.querySelectorAll('.sala-detail');
+            salas.forEach(sala => sala.style.display = 'none');
+            document.getElementById('salas-grid').style.display = 'grid';
+            
+            // Limpiar efectos
+            clearEffects();
+        }
+
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti');
+            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#3c40c6', '#00d2d3'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confettiContainer.appendChild(confetti);
+                
+                // Remover después de la animación
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 5000);
+            }
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                heartsContainer.appendChild(heart);
+                
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 5000);
+            }
+        }
+
+        function clearEffects() {
+            document.getElementById('hearts').innerHTML = '';
+            document.getElementById('confetti').innerHTML = '';
+        }
+
+        function playSound(type) {
+            // Aquí podrías agregar sonidos reales si quisieras
+            // Por ahora solo simularemos con efectos visuales adicionales
+            if (type === 'enter') {
+                createMagicSparkles();
+            }
+        }
+
+        function createMagicSparkles() {
+            const sparkles = ['✨', '⭐', '🌟', '💫'];
+            const body = document.body;
+            
+            for (let i = 0; i < 15; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.fontSize = '20px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '9999';
+                sparkle.style.animation = 'sparkle 2s ease-out forwards';
+                body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 2000);
+            }
+        }
+
+        // Agregar animación de sparkle
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkle {
+                0% { opacity: 1; transform: scale(0) rotate(0deg); }
+                50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+                100% { opacity: 0; transform: scale(0.8) rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Efectos de hover adicionales para las cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.sala-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    // Pequeño efecto de partículas en hover
+                    const rect = this.getBoundingClientRect();
+                    const sparkle = document.createElement('div');
+                    sparkle.innerHTML = '✨';
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.left = rect.left + rect.width/2 + 'px';
+                    sparkle.style.top = rect.top + rect.height/2 + 'px';
+                    sparkle.style.fontSize = '16px';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '9999';
+                    sparkle.style.animation = 'sparkle 1s ease-out forwards';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        if (sparkle.parentNode) {
+                            sparkle.parentNode.removeChild(sparkle);
+                        }
+                    }, 1000);
+                });
+            });
+        });
+
+        // Agregar un contador de visitas al museo
+        let visitCount = localStorage.getItem('museoVisitCount') || 0;
+        visitCount++;
+        localStorage.setItem('museoVisitCount', visitCount);
+
+        // Mostrar mensaje especial en múltiples visitas
+        if (visitCount > 1) {
+            setTimeout(() => {
+                const message = document.createElement('div');
+                message.innerHTML = `💕 Visita #${visitCount} al museo - ¡Carla ya visitó nuestros recuerdos ${visitCount} veces! 💕`;
+                message.style.position = 'fixed';
+                message.style.bottom = '20px';
+                message.style.right = '20px';
+                message.style.background = 'rgba(255,107,157,0.9)';
+                message.style.color = 'white';
+                message.style.padding = '15px 20px';
+                message.style.borderRadius = '25px';
+                message.style.fontSize = '14px';
+                message.style.zIndex = '10000';
+                message.style.animation = 'fadeInUp 0.5s ease';
+                document.body.appendChild(message);
+                
+                setTimeout(() => {
+                    message.style.animation = 'fadeOut 0.5s ease forwards';
+                    setTimeout(() => {
+                        if (message.parentNode) {
+                            message.parentNode.removeChild(message);
+                        }
+                    }, 500);
+                }, 4000);
+            }, 2000);
+        }
+
+        // Agregar animación fadeOut
+        const fadeOutStyle = document.createElement('style');
+        fadeOutStyle.textContent = `
+            @keyframes fadeOut {
+                to { opacity: 0; transform: translateY(20px); }
+            }
+        `;
+        document.head.appendChild(fadeOutStyle);
+
+        // Easter egg: Secuencia especial si hace click en cierto orden
+        let clickSequence = [];
+        const secretSequence = ['origenes', 'primeras', 'tesoro'];
+        
+        function checkSecretSequence(salaId) {
+            clickSequence.push(salaId);
+            if (clickSequence.length > 3) {
+                clickSequence.shift();
+            }
+            
+            if (JSON.stringify(clickSequence) === JSON.stringify(secretSequence)) {
+                showSecretMessage();
+                clickSequence = [];
+            }
+        }
+
+        function showSecretMessage() {
+            const secret = document.createElement('div');
+            secret.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="color: #ff6b9d; margin-bottom: 15px;">🎊 ¡Mensaje Secreto Desbloqueado! 🎊</h3>
+                    <p style="color: #666;">Carla, has encontrado el secreto del museo...</p>
+                    <p style="color: #c44569; font-weight: bold; font-size: 1.2rem;">
+                        "Eres la obra de arte más hermosa de este museo" 💕
+                    </p>
+                </div>
+            `;
+            secret.style.position = 'fixed';
+            secret.style.top = '50%';
+            secret.style.left = '50%';
+            secret.style.transform = 'translate(-50%, -50%)';
+            secret.style.background = 'rgba(255,255,255,0.95)';
+            secret.style.borderRadius = '20px';
+            secret.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+            secret.style.zIndex = '10001';
+            secret.style.animation = 'fadeInUp 0.5s ease';
+            secret.style.maxWidth = '400px';
+            secret.style.border = '3px solid #ff6b9d';
+            
+            document.body.appendChild(secret);
+            createConfetti();
+            createHearts();
+            
+            setTimeout(() => {
+                secret.style.animation = 'fadeOut 0.5s ease forwards';
+                setTimeout(() => {
+                    if (secret.parentNode) {
+                        secret.parentNode.removeChild(secret);
+                    }
+                }, 500);
+            }, 5000);
+        }
+
+        // Modificar la función openSala para incluir el chequeo secreto
+        const originalOpenSala = openSala;
+        openSala = function(salaId) {
+            checkSecretSequence(salaId);
+            originalOpenSala(salaId);
+        };
+    </script>
+</body>
+</html>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-primeras">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #ff6b9d; font-size: 2.5rem; margin-bottom: 30px;">💋 Galería de Primeras Veces</h2>
+                <img src="https://i.imgur.com/mjiuhfb.jpeg" alt="El sofá donde nos besamos por primera vez" class="foto-placeholder">
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    En tu departamento, en ese sofá que ahora tiene un lugar especial en nuestra historia...
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    Fue un momento íntimo y emotivo que selló el comienzo de algo hermoso. 
+                    Ese primer beso profundo no solo unió nuestros labios, sino que entrelazó nuestras almas 
+                    de una manera que sabíamos que era para siempre. La química, la ternura, 
+                    la conexión... todo se manifestó en ese instante mágico que recordaremos toda la vida.
+                </p>
+                <img src="https://i.imgur.com/9MFheCK.jpeg" alt="Las primeras caricias" class="foto-placeholder">
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Un beso mágico. De esos que se quedan alojados en mi mente, como el sueño cumplido. 
+                </p>
+
+                <div style="background: linear-gradient(45deg, #ff6b9d, #c44569); padding: 20px; border-radius: 15px; color: white; margin: 30px 0;">
+                    <p style="font-style: italic; font-size: 1.2rem;">
+                        "Algunos momentos son tan perfectos que el tiempo se detiene para admirarlos" ✨
+                    </p>
+                </div>
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-aventuras">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #f8b500; font-size: 2.5rem; margin-bottom: 30px;">🎵 Pabellón de Aventuras</h2>
+                <img src="https://i.imgur.com/w0xjuFl.jpeg" alt=Lollapalooza, nuestro momento rockero" class="foto-placeholder">
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Cuando System of a Down hizo que nuestros corazones latieran al unísono...
+                </p>
+                <img src="https://i.imgur.com/LxHUhJ4.jpeg" alt=Lollapalooza, mucha descarga de adrenalina" class="foto-placeholder">
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    una buena descarga de adrenalina ¿Cierto?
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    El Festival Lollapalooza se convirtió en el escenario perfecto para uno de nuestros 
+                    momentos más divertidos y emocionantes. Bailar, cantar y disfrutar de la música 
+                    juntos, nos mostró que podemos ser cómplices en cualquier aventura. La energía, la música, las risas... 
+                    todo se combinó para crear recuerdos que atesoraremos para siempre.
+                </p>
+                <div class="foto-placeholder">Nosotros en el festival</div>
+                <div style="background: linear-gradient(45deg, #f8b500, #ff6b9d); padding: 15px; border-radius: 10px; color: white; margin: 20px 0;">
+                    <p>🎸 System of a Down soundtrack de nuestro amor 🎸</p>
+                </div>
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-celebraciones">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #c44569; font-size: 2.5rem; margin-bottom: 30px;">🎂 Salón de Celebraciones</h2>
+                <div class="foto-placeholder">Tu cumpleaños - Regalos y sorpresas</div>
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Cada celebración contigo es un mundo de amor y detalles especiales...
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    Tu cumpleaños fue una oportunidad para demostrar cuánto te amo. Cada regalo 
+                    fue elegido pensando en tu sonrisa, y verte feliz rodeada de amigos fue el 
+                    mejor regalo para mi corazón. Y qué decir de nuestro primer aniversario... 
+                    la sorpresa de las velas, la pizza, el vino... ver tu cara de asombro 
+                    cuando llegaste a casa fue el momento más dulce.
+                </p>
+                <div class="foto-placeholder">Cena romántica con velas - Primer aniversario</div>
+                <div style="background: rgba(196, 69, 105, 0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #c44569; margin: 20px 0;">
+                    <p style="color: #c44569; font-weight: bold;">Próxima celebración: ¡3 meses de amor infinito! 🎉</p>
+                </div>
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-gastronomica">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #00d2d3; font-size: 2.5rem; margin-bottom: 30px;">🍽️ Plaza Gastronómica</h2>
+                <div class="foto-placeholder">La Mesa Tropera - Nuestro lugar especial</div>
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Cada sabor que compartimos es una nueva aventura para nuestros sentidos...
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    La Mesa Tropera y Roatan se han convertido en nuestros refugios gastronómicos, 
+                    pero más que eso, son los escenarios donde nuestras conversaciones fluyen 
+                    como el mejor vino. Nos encanta descubrir nuevos lugares, probar diferentes 
+                    sabores, brindar con cerveza y vino, y crear memorias deliciosas. 
+                    Cada cena juntos es una cita que alimenta no solo nuestros cuerpos, sino nuestra conexión.
+                </p>
+                <div class="foto-placeholder">Roatan - Otro de nuestros favoritos</div>
+                <div style="display: flex; justify-content: space-around; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="background: #ff6b9d; color: white; padding: 10px 15px; border-radius: 20px; margin: 5px;">🍷 Vino</div>
+                    <div style="background: #f8b500; color: white; padding: 10px 15px; border-radius: 20px; margin: 5px;">🍺 Cerveza</div>
+                    <div style="background: #3c40c6; color: white; padding: 10px 15px; border-radius: 20px; margin: 5px;">🍕 Aventuras Culinarias</div>
+                </div>
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-fotos">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #3c40c6; font-size: 2.5rem; margin-bottom: 30px;">📸 Cápsula del Tiempo</h2>
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    Aquí vivirán todas nuestras fotografías más preciadas...
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div class="foto-placeholder">Foto 1 - Momento especial</div>
+                    <div class="foto-placeholder">Foto 2 - Risas compartidas</div>
+                    <div class="foto-placeholder">Foto 3 - Aventuras juntos</div>
+                    <div class="foto-placeholder">Foto 4 - Momentos íntimos</div>
+                    <div class="foto-placeholder">Foto 5 - Celebraciones</div>
+                    <div class="foto-placeholder">Foto 6 - Vida cotidiana</div>
+                </div>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8; margin-top: 30px;">
+                    Cada fotografía cuenta una historia, cada sonrisa capturada es un tesoro, 
+                    cada momento inmortalizado es una página de nuestro libro de amor. 
+                    Esta galería crecerá con nosotros, llenándose de más aventuras, más risas, 
+                    más amor y más vida compartida. 
+                    <strong>Rubén: Aquí puedes agregar todas sus fotos reales favoritas</strong>
+                </p>
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
+            </div>
+        </div>
+
+        <div class="sala-detail" id="sala-tesoro">
+            <button class="close-button" onclick="closeSala()">&times;</button>
+            <div class="sala-content">
+                <h2 style="color: #ff6b9d; font-size: 2.5rem; margin-bottom: 30px;">💎 Sala del Tesoro Final</h2>
+                <p style="font-size: 1.3rem; color: #555; margin: 20px 0;">
+                    El tesoro más preciado de nuestro museo: una carta del corazón...
+                </p>
+                
+                <div class="love-letter">
+                    <h3 style="color: #c44569; text-align: center; margin-bottom: 30px; font-size: 1.8rem;">
+                        💕 Carta para Carla en nuestros 3 meses 💕
+                    </h3>
+                    
+                    <p><strong>Mi princesa,</strong></p>
+                    
+                    <p>Cumplimos un mes más como oficialmente novios. Una historia, que empezó con pasos tímidos en noviembre pasado y que nos llevó a lo que somos al día de hoy. Nos descubrimos, nos reconocimos en luces y en sombras, y seguimos escribiendo una historia.
+Te amo con todo lo que eres: con tus momentos de claridad y con los momentos de dificultad. Te amo en lo bueno y en lo difícil, porque estoy convencido de que el amor verdadero no es solo celebración, sino también voluntad de evolucionar juntos. Lo que nos atraviesa no nos destruye, sino nos invita a transformarnos.
+Has llenado mis días de emoción.
+Gracias por ser mi compañera. Gracias por permitirme amarte de esta manera. Lo único que quiero es seguir caminando contigo, con verdad, con entregay con el compromiso de que, pase lo que pase, lo nuestro siempre evolucionará hacia algo mejor. 
+Te amo. 
+                    
+                    <p style="text-align: right; margin-top: 30px;"><strong>Tu Rubén 💕</strong></p>
+                    
+                    <p style="text-align: center; margin-top: 30px; color: #ff6b9d; font-style: italic;">
+                        domingo, 24 de Agosto de 2025<br>
+                        ✨ 3 meses oficiales, de puro amor ✨
+                    </p>
+                </div>
+                
+                <button class="back-to-museum" onclick="closeSala()">Volver al Museo</button>
